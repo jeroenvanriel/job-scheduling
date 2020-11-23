@@ -3,7 +3,7 @@ ptimes = []
 
 input_file = open("ptimes.txt", "r")
 for p in input_file:
-  ptimes.append(int(x))
+  ptimes.append(int(p))
 
 print("number of jobs in input: {}".format(len(ptimes)))
 
