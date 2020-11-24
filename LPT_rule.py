@@ -53,4 +53,7 @@ for i in range(m):
     if c_i > makespan:
         makespan = c_i
     
-print(makespan)
+# print the final makespand
+print("Final makespan: {}".format(makespan))
+# print in scientific notation as well
+print("{:e}".format(makespan))
