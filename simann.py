@@ -99,7 +99,11 @@ def assessMove(difference, temperature):
         # However, this is not necessary, i.e., this probability does not need to be 1.
         # I think that it is even crucial to have this probability decrease if the difference is too big, i.e.,
         # if the improvement is too good. We want to make the algorithm less 'greedy'.
-        return random.random() < math.exp(difference / 1e11)
+
+        if temperature > 0.90:
+            return True
+        else:
+            return random.random() < math.exp(difference / 8e10)
     else:
         # In this case the makespan has not improved.
         # Randomly determine if we are still going to accept depending on the temperature.
@@ -107,7 +111,7 @@ def assessMove(difference, temperature):
         # of still accepting gets smaller and smaller.
         # Furthermore, the larger the difference, the smaller the chance that we will accept
         # the move.
-        return random.random() < temperature * math.exp(-difference / 5e12)
+        return random.random() < temperature * math.exp(-difference / 4e12)
 
 
 def getTemperature(k, nr_iterations):
@@ -118,7 +122,7 @@ def getTemperature(k, nr_iterations):
 
 
 # the maximum number of iterations that we are allowed to do
-n_iterations = 1000
+n_iterations = 2000000
 
 # pick an initial state
 state = getRandomState()
@@ -144,7 +148,7 @@ for k in range(n_iterations):
 
     # update temperature
     temperature = getTemperature(k, n_iterations)
-    print("Current temperature is: {}".format(temperature))
+    #print("Current temperature is: {}".format(temperature))
     temperature_lst.append(temperature)
 
     # generate a random move to a neighboring state
@@ -158,7 +162,7 @@ for k in range(n_iterations):
     difference_lst.append(difference)
     
     if assessMove(difference, temperature):
-        print("Accept move!")
+        #print("Accept move!")
         accept_nr += 1
 
         # make the move
@@ -167,14 +171,15 @@ for k in range(n_iterations):
         # and update the makespan
         current_makespan = new_makespan
     else:
-        print("Reject move!")
+        pass
+        #print("Reject move!")
     
     # update the best known values
     if current_makespan < best_makespan:
         best_makespan = current_makespan
         best_state = state
     
-    print("Current makespan is: {}".format(current_makespan))
+    #print("Current makespan is: {}".format(current_makespan))
     makespan_lst.append(current_makespan)
 
 
