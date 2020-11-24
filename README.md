@@ -12,11 +12,5 @@ The script `simann.py` performs simulated annealing and stores the results from 
 
 Output data version 1, file name starting with `simann1_`
 ```
-data = (makespan_lst, temperature_lst)
-```
-
-
-Output data version 2, file name starting with `simann2_`
-```
 data = (best_makespan, best_state, makespan_lst, temperature_lst, difference_lst)
 ```

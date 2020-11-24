@@ -84,7 +84,7 @@ def makespanAfterMove(state, move):
         if j == job:
             totals[new_machine] += ptimes[j]
         else:
-            totals[state[job]] += ptimes[job]
+            totals[state[j]] += ptimes[j]
     
     # return the maximum completion time over all machines, which is called the makespan
     return max(totals)
@@ -209,8 +209,8 @@ plt.show()
 data = (best_makespan, best_state, makespan_lst, temperature_lst, difference_lst)
 
 i = 0
-while os.path.exists("./output/simann2_%s" % i):
+while os.path.exists("./output/simann1_%s" % i):
     i += 1
 
-with open("./output/simann2_%s" % i, "wb") as fp:
+with open("./output/simann1_%s" % i, "wb") as fp:
     pickle.dump(data, fp)
