@@ -97,7 +97,9 @@ def assessMove(difference, temperature):
         # The makespan has improved!
         # We choose to accept this move immediately.
         # However, this is not necessary, i.e., this probability does not need to be 1.
-        return True
+        # I think that it is even crucial to have this probability decrease if the difference is too big, i.e.,
+        # if the improvement is too good. We want to make the algorithm less 'greedy'.
+        return random.random() < math.exp(difference / 1e11)
     else:
         # In this case the makespan has not improved.
         # Randomly determine if we are still going to accept depending on the temperature.
