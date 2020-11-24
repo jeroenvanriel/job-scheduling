@@ -100,13 +100,12 @@ def assessMove(difference, temperature):
         return True
     else:
         # In this case the makespan has not improved.
-        # randomly determines if we are still going to accept depending on the temperature
-        # if the temperature approaches 0, we are getting more careful, so the change
-        # of still accepting gets smaller and smaller
-        if random.random() < temperature * math.exp(-difference):
-            return True
-        else:
-            return False
+        # Randomly determine if we are still going to accept depending on the temperature.
+        # If the temperature approaches 0, we are getting more careful, so the change
+        # of still accepting gets smaller and smaller.
+        # Furthermore, the larger the difference, the smaller the chance that we will accept
+        # the move.
+        return random.random() < temperature * math.exp(-difference / 5e12)
 
 
 def getTemperature(k, nr_iterations):
@@ -133,12 +132,16 @@ temperature = 1
 # keep track of some values in order to plot them later
 makespan_lst = [ current_makespan ]
 temperature_lst = []
+# difference between t and t-1
+difference_lst = [ 0 ]
+# number of times that we accepted the random move
+accept_nr = 0
 
 # start the simulated annealing iterations
-for k in range(max_iterations):
+for k in range(n_iterations):
 
     # update temperature
-    temperature = getTemperature(k, max_iterations)
+    temperature = getTemperature(k, n_iterations)
     print("Current temperature is: {}".format(temperature))
     temperature_lst.append(temperature)
 
@@ -149,8 +152,12 @@ for k in range(max_iterations):
     new_makespan = makespanAfterMove(state, move)
 
     # decide if we are going to accept this move based on the difference in the makespans
-    if assessMove(new_makespan - current_makespan, temperature):
+    difference = new_makespan - current_makespan
+    difference_lst.append(difference)
+    
+    if assessMove(difference, temperature):
         print("Accept move!")
+        accept_nr += 1
 
         # make the move
         (job, current_machine, new_machine) = move
@@ -160,29 +167,48 @@ for k in range(max_iterations):
     else:
         print("Reject move!")
     
+    # update the best known values
+    if current_makespan < best_makespan:
+        best_makespan = current_makespan
+        best_state = state
+    
     print("Current makespan is: {}".format(current_makespan))
     makespan_lst.append(current_makespan)
 
 
 # we are left with a final state whith a certain makespan
-print("Final makespan: {}".format(current_makespan))
+print("Final makespan: {:e}".format(current_makespan))
+
+# but we also kept track of the best makespan that we encountered so far
+print("Best makespan: {:e}".format(best_makespan))
+
+print("Accept ratio: {}".format(accept_nr / n_iterations))
 
 plt.figure()
 
-plt.subplot(211)
+plt.subplot(311)
+plt.title('Makespan')
+plt.yscale('log')
 plt.plot(makespan_lst)
 
-plt.subplot(212)
+plt.subplot(312)
+plt.title('Temperature')
+plt.yscale('linear')
 plt.plot(temperature_lst)
+
+plt.subplot(313)
+plt.title('Difference')
+plt.yscale('linear')
+plt.plot(difference_lst)
 plt.show()
 
 
 # save the collected data to file
-data = (makespan_lst, temperature_lst)
+data = (best_makespan, best_state, makespan_lst, temperature_lst, difference_lst)
 
 i = 0
-while os.path.exists("./output/simann1_%s" % i):
+while os.path.exists("./output/simann2_%s" % i):
     i += 1
 
-with open("./output/simann1_%s" % i, "wb") as fp:
+with open("./output/simann2_%s" % i, "wb") as fp:
     pickle.dump(data, fp)
