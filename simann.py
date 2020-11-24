@@ -118,7 +118,7 @@ def getTemperature(k, nr_iterations):
 
 
 # the maximum number of iterations that we are allowed to do
-max_iterations = 1000
+n_iterations = 1000
 
 # pick an initial state
 state = getRandomState()
