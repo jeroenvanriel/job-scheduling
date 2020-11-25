@@ -100,7 +100,7 @@ def assessMove(difference, temperature):
         # I think that it is even crucial to have this probability decrease if the difference is too big, i.e.,
         # if the improvement is too good. We want to make the algorithm less 'greedy'.
 
-        if temperature > 0.90:
+        if temperature < 0.2:
             return True
         else:
             return random.random() < math.exp(difference / 8e10)
