@@ -12,7 +12,7 @@ input_file = open("ptimes.txt", "r")
 for p in input_file:
   ptimes.append(int(p))
 
-print("number of jobs in input: {}".format(len(ptimes)))
+print("Number of jobs in input: {}".format(len(ptimes)))
 
 # sort list in descending order
 ptimes.sort(reverse=True)
@@ -22,6 +22,8 @@ n = len(ptimes)
 
 # number of machines
 m = 10
+
+print("Number of machines: {}".format(m))
 
 
 def getRandomState():
