@@ -2,6 +2,7 @@ import math
 import random
 import matplotlib.pyplot as plt
 import os
+from timeit import default_timer as timer # see https://stackoverflow.com/questions/7370801/how-to-measure-elapsed-time-in-python
 import pickle
 
 
@@ -126,6 +127,11 @@ def getTemperature(k, nr_iterations):
 # the maximum number of iterations that we are allowed to do
 n_iterations = 2000000
 
+print("Number of iterations: {}".format(n_iterations))
+
+# we get the current time in order to calculate the total computation time
+t0 = timer()
+
 # pick an initial state
 state = getRandomState()
 current_makespan = makespan(state)
@@ -185,13 +191,15 @@ for k in range(n_iterations):
     makespan_lst.append(current_makespan)
 
 
+print("Total computation (wall-clock) time: {} seconds".format(timer() - t0))
+
 # we are left with a final state whith a certain makespan
 print("Final makespan: {:e}".format(current_makespan))
 
 # but we also kept track of the best makespan that we encountered so far
 print("Best makespan: {:e}".format(best_makespan))
 
-print("Accept ratio: {}".format(accept_nr / n_iterations))
+print("Overall accept ratio: {}".format(accept_nr / n_iterations))
 
 plt.figure()
 
