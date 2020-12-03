@@ -1,5 +1,6 @@
 import os, pickle
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 from dataclasses import dataclass
 
 
@@ -11,6 +12,7 @@ class Experiment:
     '''
 
     runtime: float
+    n_iterations: int
     accept_ratio: float
     
     final_makespan: int
@@ -73,22 +75,31 @@ class Experiment:
         If a filename is provided then it saves the plot to file instead.
         '''
 
-        plt.figure()
+        fig = plt.figure(figsize=(10, 5))
+        gs = GridSpec(nrows=2, ncols=2, width_ratios=[3, 1], height_ratios=[1, 1])
 
-        plt.subplot(211)
+        ax0 = fig.add_subplot(gs[0, 0])
         plt.title('Makespan')
         plt.yscale('log')
-        plt.plot(self.makespan_lst)
+        ax0.plot(self.makespan_lst)
 
-        plt.subplot(212)
+        ax1 = fig.add_subplot(gs[1, 0])
         plt.title('Difference')
         plt.yscale('linear')
-        plt.plot(self.difference_lst)
+        ax1.plot(self.difference_lst)
 
-        # plt.subplot(313)
-        # plt.title('Temperature')
-        # plt.yscale('linear')
-        # plt.plot(self.temperature_lst)
+        ax2 = fig.add_subplot(gs[0, 1])
+        table_text = [
+            ['iterations', self.n_iterations],
+            ['makespan', "{:e}".format(self.best_makespan)],
+            ['runtime', str(round(self.runtime, 5))],
+            ['accept ratio', self.accept_ratio]
+        ]
+        ax2.axis('tight')
+        ax2.axis('off')
+        table = plt.table(cellText=table_text, loc='center')
+        table.scale(1.5, 1.5)
+        table.set_fontsize(14)
         
         plt.tight_layout()
 

@@ -179,6 +179,7 @@ class SimulatedAnnealing:
         # save the results from this run
         self.result = Experiment(
             runtime = timer() - t0,
+            n_iterations = n_iterations,
             accept_ratio = accept_nr / n_iterations,
             final_makespan = current_makespan,
             final_state = state,
