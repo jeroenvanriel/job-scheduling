@@ -6,7 +6,7 @@ import random, math
 
 def localSearch(difference, temperature):
     """Only accepts good-moves."""
-    if difference < 0: # good-move
+    if difference <= 0: # good-move
         return True
     else: # bad-move
         return False
