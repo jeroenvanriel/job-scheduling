@@ -111,3 +111,53 @@ class Experiment:
             print("Machine {}: (total {}) {}".format(machine, total, machine_jobs[machine]))
 
         print("Makespan: {:e}".format(self.best_makespan))
+
+
+    def plotSchedule(self, problem):
+        '''
+        Makes a sort of 'Gantt-chart' for the best schedule that was found during this experiment.
+        In order to avoid problem data duplication, this method needs a reference
+        to the original problem instance (of type SimulatedAnnealing) to access the ptimes.
+        '''
+
+        # For each machine we create a list that contains the jobs that have
+        # been assigned to it.
+        machine_jobs = [[] for x in range(problem.m)]
+        for job in range(problem.n):
+            machine_jobs[self.best_state[job]].append(job)
+
+        # Declaring a figure "gnt"
+        fig, gnt = plt.subplots()
+
+        # chart settings
+        x_limit = 260
+        padding = 0.5
+
+        gnt.set_xlim(0, x_limit + 10)
+        gnt.set_ylabel('Machine')
+
+        # setting tick for max makespan
+        gnt.set_xticks([x_limit])
+        gnt.set_xticklabels(['maximum makespan'])
+
+        # setting ticks for machine id's
+        gnt.set_yticks([5 * (x) + 2 for x in range(problem.m)])
+        gnt.set_yticklabels([str(x + 1) for x in range(problem.m)])
+
+        gnt.grid(True) # show grid
+
+        for machine in range(problem.m):
+            blocks = []
+
+            t = 0 # current start time
+            for job in machine_jobs[machine]:
+                # define scaled length
+                length = problem.ptimes[job] / self.best_makespan * x_limit
+
+                blocks.append((t + padding, length - padding))
+                t += length
+
+            # Declaring a bar in schedule
+            gnt.broken_barh(blocks, (5 * machine, 4), facecolors =('tab:orange'))
+
+        plt.show()

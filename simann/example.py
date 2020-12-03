@@ -21,3 +21,4 @@ experiment2 = Experiment.loadFromFile(save_file)
 experiment2.showResults()
 
 experiment2.printSchedule(instance)
+experiment2.plotSchedule(instance)
