@@ -1,16 +1,11 @@
 # Job Scheduling
 This repository contains some implementation of algorithms for solving makespan scheduling problem. This project was done as part of the course Mathematical Modelling (2WH30) at TUe.
 
+## LPT rule
+The simple longest processing time first rule is implemented in `LPT_rule.py`.
 
 ## Simulated annealing
 
 [Wikipedia article](https://en.wikipedia.org/wiki/Simulated_annealing)
 
-The script `simann.py` performs simulated annealing and stores the results from an experiment in an output file in the folder `output/`. The data format of these files may change over time and is described below.
-
-### Data formats
-
-Output data version 1, file name starting with `simann1_`
-```
-data = (best_makespan, best_state, makespan_lst, temperature_lst, difference_lst)
-```
+The simulated annealing is implemented in `simann/simann.py`. The script `simann/example.py` contains an example on how to perform a simulated annealing experiment and how to store the results to a file. Note that the file `simann/p_functions.py` is used to define different acceptance probability functions to experiment with.
