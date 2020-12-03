@@ -13,7 +13,7 @@ def localSearch(difference, temperature):
 
 def linearBadmoveAccept(difference, temperature):
     """Always accept good moves, and let bad-move acceptance depend linearly on the temperature."""
-    if difference < 0: # good-move
+    if difference <= 0: # good-move
         return True
     else: # bad-move
         # Let the probability of accepting depend linearly on the temperature
@@ -21,7 +21,7 @@ def linearBadmoveAccept(difference, temperature):
 
 def exponentialDecay(difference, temperature):
     """Use an exponential function of the difference."""
-    if difference < 0: # good-move
+    if difference <= 0: # good-move
         # If the improvement is too good. We want to make the algorithm less 'greedy'.
         return random.random() < math.exp(difference / 8e10)
     else: # bad-move
