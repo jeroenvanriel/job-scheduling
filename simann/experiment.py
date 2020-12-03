@@ -72,7 +72,7 @@ class Experiment:
     def plotResults(self, file_name=None):
         '''
         Displays a plot the makespan, temperature and difference values over time.
-        If a filename is provided then it saves the plot to file instead.
+        If file_name is provided then it saves the plot to file instead.
         '''
 
         fig = plt.figure(figsize=(10, 5))
@@ -133,11 +133,12 @@ class Experiment:
         print("Makespan: {:e}".format(self.best_makespan))
 
 
-    def plotSchedule(self, problem):
+    def plotSchedule(self, problem, file_name=None):
         '''
         Makes a sort of 'Gantt-chart' for the best schedule that was found during this experiment.
         In order to avoid problem data duplication, this method needs a reference
         to the original problem instance (of type SimulatedAnnealing) to access the ptimes.
+        If file_name is provided then it saves the plot to file instead.
         '''
 
         # For each machine we create a list that contains the jobs that have
@@ -180,4 +181,7 @@ class Experiment:
             # Declaring a bar in schedule
             gnt.broken_barh(blocks, (5 * machine, 4), facecolors =('tab:orange'))
 
-        plt.show()
+        if file_name is not None:
+            plt.savefig(file_name)
+        else:
+            plt.show()
