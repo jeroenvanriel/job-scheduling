@@ -58,16 +58,20 @@ class Experiment:
 
 
     def showResults(self):
-        '''
-        This method prints a summary of the experiment and plots the makespan, temperature
-        and difference values over time.
-        '''
+        '''Print a summary of the experiment.'''
 
         print("Total computation (wall-clock) time: {} seconds".format(self.runtime))
         print("Final makespan: {:e}".format(self.final_makespan))
         print("Best makespan: {:e}".format(self.best_makespan))
         print("Overall accept ratio: {}".format(self.accept_ratio))
         print()
+
+
+    def plotResults(self, file_name=None):
+        '''
+        Displays a plot the makespan, temperature and difference values over time.
+        If a filename is provided then it saves the plot to file instead.
+        '''
 
         plt.figure()
 
@@ -87,7 +91,11 @@ class Experiment:
         # plt.plot(self.temperature_lst)
         
         plt.tight_layout()
-        plt.show()
+
+        if file_name is not None:
+            plt.savefig(file_name)
+        else:
+            plt.show()
 
 
     def printSchedule(self, problem):
