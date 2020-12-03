@@ -71,21 +71,22 @@ class Experiment:
 
         plt.figure()
 
-        plt.subplot(311)
+        plt.subplot(211)
         plt.title('Makespan')
         plt.yscale('log')
         plt.plot(self.makespan_lst)
 
-        plt.subplot(312)
-        plt.title('Temperature')
-        plt.yscale('linear')
-        plt.plot(self.temperature_lst)
-
-        plt.subplot(313)
+        plt.subplot(212)
         plt.title('Difference')
         plt.yscale('linear')
         plt.plot(self.difference_lst)
+
+        # plt.subplot(313)
+        # plt.title('Temperature')
+        # plt.yscale('linear')
+        # plt.plot(self.temperature_lst)
         
+        plt.tight_layout()
         plt.show()
 
 
