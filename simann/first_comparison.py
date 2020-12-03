@@ -14,6 +14,7 @@ output_prefix = "./experiments/exp"
 
 exp1 = instance.start(1000, localSearch)
 exp1.plotResults("{}1.png".format(output_prefix))
+exp1.plotSchedule(instance, file_name="./experiments/exp1_schedule.png")
 
 exp2 = instance.start(1000, linearBadmoveAccept)
 exp2.plotResults("{}2.png".format(output_prefix))
