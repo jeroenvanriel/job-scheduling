@@ -102,7 +102,7 @@ class SimulatedAnnealing:
         return 1 - ratio
 
 
-    def start(self, n_iterations, p_function):
+    def start(self, n_iterations, p_function, good_accept, bad_accept):
         '''
         n_iterations: the total number of iterations that are used
         p_function: acceptance probability function which determines wheter to accept a move based on
@@ -155,7 +155,7 @@ class SimulatedAnnealing:
             difference = new_makespan - current_makespan
             difference_lst.append(difference)
             
-            if p_function(difference, temperature):
+            if p_function(difference, temperature, good_accept, bad_accept):
                 #print("Accept move!")
                 accept_nr += 1
 
