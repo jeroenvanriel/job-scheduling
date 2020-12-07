@@ -21,14 +21,14 @@ def linearBadmoveAccept(difference, temperature, good_accept, bad_accpet):
 
 def exponentialDecay(difference, temperature, good_accept, bad_accpet):
     """Use an exponential function of the difference."""
-    if difference < 0: # good-move
+    if difference <= 0: # good-move
         # If the improvement is too good. We want to make the algorithm less 'greedy'.
         return random.random() < math.exp(difference / good_accept)
     else: # bad-move
         # If the temperature approaches 0, we are getting more careful, so the chance
         # of still accepting gets smaller and smaller.
         # Furthermore, the larger the difference, the smaller the chance that we will accept the move.
-        return random.random() < temperature * math.exp(-difference / bad_accpet)
+        return random.random() < temperature * math.exp(-bad_accpet / difference)
 
 def exponentialDecayNonInc(difference, temperature, good_accept, bad_accpet):
     """Use an exponential function of the difference."""
@@ -39,4 +39,4 @@ def exponentialDecayNonInc(difference, temperature, good_accept, bad_accpet):
         # If the temperature approaches 0, we are getting more careful, so the chance
         # of still accepting gets smaller and smaller.
         # Furthermore, the larger the difference, the smaller the chance that we will accept the move.
-        return random.random() < temperature * math.exp(-difference / bad_accpet)
+        return random.random() < temperature * math.exp(-bad_accpet / difference )
