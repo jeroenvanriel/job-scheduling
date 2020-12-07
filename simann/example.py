@@ -11,7 +11,7 @@ instance = SimulatedAnnealing.fromFile(jobs_file, m)
 output_prefix = "./experiments/simann"
 
 # run experiment and save to file
-experiment1 = instance.start(1000, localSearch) # 1000 iterations using local search
+experiment1 = instance.start(1000, localSearch, 0, 0) # 1000 iterations using local search
 experiment1.showResults() # show numerical summary and plots
 save_file = experiment1.save(output_prefix) # save this experiment to file
 print(save_file) # print the file name to which the experiment was saved
