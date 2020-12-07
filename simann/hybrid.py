@@ -29,14 +29,48 @@ class SimulatedAnnealing:
         return cls(ptimes, m)
 
 
-    def getRandomState(self):
-        """Returns the state after randomly assigning each job to a machine."""
+    def getInitialState(self):
+        """Returns the state after assigning each job by the LPT rule"""
 
-        s = [-1 for x in range(self.n)]
+        copyptimes = self.ptimes
 
+        s = [[] for x in range(self.n)]
+
+        min_ci = 0
+        min_i = 0
+
+        # assign a machine to each job
         for j in range(self.n):
-            # assign job j randomly to one of the machines
-            s[j] = random.randrange(self.m)
+
+            # reset the variables for each iteration
+            max_t = 0
+            max_it = 0
+
+            # check which position has biggest makespan
+            for i in range(self.n):
+                if max_t < copyptimes[i]:
+                    max_t = copyptimes[i]
+                    max_it = i
+
+            # assign the job with biggest makespan to machine with smallest makespan
+            s[max_it] = min_i
+            # set the jobs makespan to -1
+            copyptimes[max_it] = -1
+
+            # check which machine has smallest makespan
+            for i in range(self.m):
+                
+                c_i = 0
+                
+                # iterate over jobs and add to makespan if assigned to this machine
+                for k in range(self.n):
+                    if s[k] == i:
+                        c_i += self.ptimes[s[k]]
+
+                # if makespan of this machine is smaller then replace it
+                if c_i < min_ci:
+                    min_ci = c_i
+                    min_i = i
 
         return s
 
@@ -102,13 +136,11 @@ class SimulatedAnnealing:
         return 1 - ratio
 
 
-    def start(self, n_iterations, p_function, good_accept, bad_accept, state_callback=None):
+    def start(self, n_iterations, p_function, good_accept, bad_accept):
         '''
         n_iterations: the total number of iterations that are used
         p_function: acceptance probability function which determines wheter to accept a move based on
             the current difference and current temperature
-        state_callback: callback function that is called with the current iteration number, current state 
-            and current makespan, only use this for debugging purposes.
 
         returns an Experiment object which contains the details about the completed run
         '''
@@ -121,7 +153,7 @@ class SimulatedAnnealing:
         t0 = timer()
 
         # pick an initial state
-        state = self.getRandomState()
+        state = self.getInitialState()
         current_makespan = self.makespan(state)
 
         # keep track of the current best state and makespan
@@ -141,9 +173,6 @@ class SimulatedAnnealing:
 
         # start the simulated annealing iterations
         for k in range(n_iterations):
-            # callback
-            if state_callback:
-                state_callback(k, state, current_makespan)
 
             # update temperature
             temperature = self.getTemperature(k, n_iterations)
@@ -180,10 +209,6 @@ class SimulatedAnnealing:
             
             #print("Current makespan is: {}".format(current_makespan))
             makespan_lst.append(current_makespan)
-
-        # callback
-        if state_callback:
-            state_callback(k, state, current_makespan)
 
         # save the results from this run
         self.result = Experiment(

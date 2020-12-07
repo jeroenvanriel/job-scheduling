@@ -141,24 +141,34 @@ class Experiment:
         If file_name is provided then it saves the plot to file instead.
         '''
 
+        self._plotState(problem, self.best_state, self.best_makespan, file_name=file_name)
+
+
+    @staticmethod
+    def _plotState(problem, state, state_makespan, padding=1, makespan_max=None, file_name=None):
+        '''Helper method for visualizing a given schedule.'''
+
         # For each machine we create a list that contains the jobs that have
         # been assigned to it.
         machine_jobs = [[] for x in range(problem.m)]
         for job in range(problem.n):
-            machine_jobs[self.best_state[job]].append(job)
+            machine_jobs[state[job]].append(job)
 
         # Declaring a figure "gnt"
         fig, gnt = plt.subplots()
 
         # chart settings
-        x_limit = 260
-        padding = 0.5
+        x_limit = 200
+        # if not x axis maximum is provided, we scale so that the current maximum
+        # makespan is the rightmost value
+        if not makespan_max:
+            makespan_max = state_makespan
 
         gnt.set_xlim(0, x_limit + 10)
         gnt.set_ylabel('Machine')
 
         # setting tick for max makespan
-        gnt.set_xticks([x_limit])
+        gnt.set_xticks([state_makespan / makespan_max * x_limit])
         gnt.set_xticklabels(['maximum makespan'])
 
         # setting ticks for machine id's
@@ -173,7 +183,7 @@ class Experiment:
             t = 0 # current start time
             for job in machine_jobs[machine]:
                 # define scaled length
-                length = problem.ptimes[job] / self.best_makespan * x_limit
+                length = problem.ptimes[job] / makespan_max * x_limit
 
                 blocks.append((t + padding, length - padding))
                 t += length
