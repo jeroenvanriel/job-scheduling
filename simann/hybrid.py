@@ -40,14 +40,14 @@ class SimulatedAnnealing:
         min_i = 0
 
         # assign a machine to each job
-        for j in range(n):
+        for j in range(self.n):
 
             # reset the variables for each iteration
             max_t = 0
             max_it = 0
 
             # check which position has biggest makespan
-            for i in range(n):
+            for i in range(self.n):
                 if max_t < copyptimes[i]:
                     max_t = copyptimes[i]
                     max_it = i
@@ -58,14 +58,14 @@ class SimulatedAnnealing:
             copyptimes[max_it] = -1
 
             # check which machine has smallest makespan
-            for i in range(m):
+            for i in range(self.m):
                 
                 c_i = 0
                 
                 # iterate over jobs and add to makespan if assigned to this machine
-                for k in range(n):
+                for k in range(self.n):
                     if s[k] == i:
-                        c_i += s[k]
+                        c_i += self.ptimes[s[k]]
 
                 # if makespan of this machine is smaller then replace it
                 if c_i < min_ci:
