@@ -30,13 +30,47 @@ class SimulatedAnnealing:
 
 
     def getInitialState(self):
-        """Returns the state after randomly assigning each job to a machine."""
+        """Returns the state after assigning each job by the LPT rule"""
 
-        s = [-1 for x in range(self.n)]
+        copyptimes = self.ptimes
 
-        for j in range(self.n):
-            # assign job j randomly to one of the machines
-            s[j] = random.randrange(self.m)
+        s = [[] for x in range(self.n)]
+
+        min_ci = 0
+        min_i = 0
+
+        # assign a machine to each job
+        for j in range(n):
+
+            # reset the variables for each iteration
+            max_t = 0
+            max_it = 0
+
+            # check which position has biggest makespan
+            for i in range(n):
+                if max_t < copyptimes[i]:
+                    max_t = copyptimes[i]
+                    max_it = i
+
+            # assign the job with biggest makespan to machine with smallest makespan
+            s[max_it] = min_i
+            # set the jobs makespan to -1
+            copyptimes[max_it] = -1
+
+            # check which machine has smallest makespan
+            for i in range(m):
+                
+                c_i = 0
+                
+                # iterate over jobs and add to makespan if assigned to this machine
+                for k in range(n):
+                    if s[k] == i:
+                        c_i += s[k]
+
+                # if makespan of this machine is smaller then replace it
+                if c_i < min_ci:
+                    min_ci = c_i
+                    min_i = i
 
         return s
 
