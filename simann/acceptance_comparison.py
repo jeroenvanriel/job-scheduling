@@ -10,14 +10,14 @@ instance = SimulatedAnnealing.fromFile(jobs_file, m)
 # output filename
 output_prefix = "./experiments/accept_exp"
 
-accept_exp1 = instance.start(100000, exponentialDecay, 8e9, 4e10)  
+accept_exp1 = instance.start(100000, exponentialDecay, 8e10, 4e12)  
 accept_exp1.plotResults("{}1.png".format(output_prefix))
 
-accept_exp2 = instance.start(100000, exponentialDecay, 8e8, 4e10)
+accept_exp2 = instance.start(100000, exponentialDecay, 8e10, 4e10)
 accept_exp2.plotResults("{}2.png".format(output_prefix))
 
-accept_exp3 = instance.start(100000, exponentialDecayNonInc, 8e9, 4e10)
+accept_exp3 = instance.start(100000, exponentialDecayNonInc, 8e10, 4e12)
 accept_exp3.plotResults("{}3.png".format(output_prefix))
 
-accept_exp4 = instance.start(100000, exponentialDecayNonInc, 8e8, 4e10)
+accept_exp4 = instance.start(100000, exponentialDecayNonInc, 8e10, 4e10)
 accept_exp4.plotResults("{}4.png".format(output_prefix))
