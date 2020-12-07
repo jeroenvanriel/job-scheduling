@@ -4,14 +4,14 @@
 
 import random, math
 
-def localSearch(difference, temperature, good_accept, bad_accpet):
+def localSearch(difference, temperature, good_accept, bad_accept):
     """Only accepts good-moves."""
     if difference <= 0: # good-move
         return True
     else: # bad-move
         return False
 
-def linearBadmoveAccept(difference, temperature, good_accept, bad_accpet):
+def linearBadmoveAccept(difference, temperature, good_accept, bad_accept):
     """Always accept good moves, and let bad-move acceptance depend linearly on the temperature."""
     if difference <= 0: # good-move
         return True
@@ -19,7 +19,7 @@ def linearBadmoveAccept(difference, temperature, good_accept, bad_accpet):
         # Let the probability of accepting depend linearly on the temperature
         return random.random() < temperature
 
-def exponentialDecay(difference, temperature, good_accept, bad_accpet):
+def exponentialDecay(difference, temperature, good_accept, bad_accept):
     """Use an exponential function of the difference."""
     if difference <= 0: # good-move
         # If the improvement is too good. We want to make the algorithm less 'greedy'.
@@ -28,9 +28,9 @@ def exponentialDecay(difference, temperature, good_accept, bad_accpet):
         # If the temperature approaches 0, we are getting more careful, so the chance
         # of still accepting gets smaller and smaller.
         # Furthermore, the larger the difference, the smaller the chance that we will accept the move.
-        return random.random() < temperature * math.exp(-bad_accpet / difference)
+        return random.random() < temperature * math.exp(-bad_accept / difference)
 
-def exponentialDecayNonInc(difference, temperature, good_accept, bad_accpet):
+def exponentialDecayNonInc(difference, temperature, good_accept, bad_accept):
     """Use an exponential function of the difference."""
     if difference <= 0: # good-move
         # If the improvement is too good. We want to make the algorithm less 'greedy'.
@@ -39,4 +39,4 @@ def exponentialDecayNonInc(difference, temperature, good_accept, bad_accpet):
         # If the temperature approaches 0, we are getting more careful, so the chance
         # of still accepting gets smaller and smaller.
         # Furthermore, the larger the difference, the smaller the chance that we will accept the move.
-        return random.random() < temperature * math.exp(-bad_accpet / difference )
+        return random.random() < temperature * math.exp(-bad_accept / difference )
