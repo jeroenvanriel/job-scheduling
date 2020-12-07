@@ -102,11 +102,13 @@ class SimulatedAnnealing:
         return 1 - ratio
 
 
-    def start(self, n_iterations, p_function):
+    def start(self, n_iterations, p_function, state_callback=None):
         '''
         n_iterations: the total number of iterations that are used
         p_function: acceptance probability function which determines wheter to accept a move based on
             the current difference and current temperature
+        state_callback: callback function that is called with the current iteration number, current state 
+            and current makespan, only use this for debugging purposes.
 
         returns an Experiment object which contains the details about the completed run
         '''
@@ -139,6 +141,9 @@ class SimulatedAnnealing:
 
         # start the simulated annealing iterations
         for k in range(n_iterations):
+            # callback
+            if state_callback:
+                state_callback(k, state, current_makespan)
 
             # update temperature
             temperature = self.getTemperature(k, n_iterations)
@@ -175,6 +180,10 @@ class SimulatedAnnealing:
             
             #print("Current makespan is: {}".format(current_makespan))
             makespan_lst.append(current_makespan)
+
+        # callback
+        if state_callback:
+            state_callback(k, state, current_makespan)
 
         # save the results from this run
         self.result = Experiment(
