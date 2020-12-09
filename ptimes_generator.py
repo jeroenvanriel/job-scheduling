@@ -9,8 +9,11 @@ def ptimes_generate(n: int, mu: float, sigma: float, file_name: str) -> List[int
     ptimes = []
     for i in range(n):
         value = np.random.normal(mu,sigma)
-        value_str = str(value)
+        value_str = str(int(round(value)))
         ptimes.append(value_str)
     with open(file_name, 'w') as f:
         f.write('\n'.join(ptimes))
+        
+# Example:
+# ptimes_generate(100,5000000000,2500000000,"ptimes_normal.txt")
         
