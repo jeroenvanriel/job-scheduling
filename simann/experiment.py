@@ -2,6 +2,7 @@ import os, pickle
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from dataclasses import dataclass
+from statistics import mean
 
 
 @dataclass
@@ -24,6 +25,9 @@ class Experiment:
     makespan_lst: list
     temperature_lst: list
     difference_lst: list
+    accepted_good_difference_lst: list
+    accepted_bad_difference_lst: list
+    accepted_zero_difference: int
 
     @classmethod
     def loadFromFile(cls, file_path):
@@ -91,9 +95,10 @@ class Experiment:
         ax2 = fig.add_subplot(gs[0, 1])
         table_text = [
             ['iterations', self.n_iterations],
-            ['makespan', "{:e}".format(self.best_makespan)],
+            ['best makespan', "{:.5e}".format(self.best_makespan)],
             ['runtime', str(round(self.runtime, 5))],
-            ['accept ratio', self.accept_ratio]
+            ['accept ratio', self.accept_ratio],
+            ['mean diff good move', "{:.5e}".format(round(mean(self.accepted_good_difference_lst)))]
         ]
         ax2.axis('tight')
         ax2.axis('off')
