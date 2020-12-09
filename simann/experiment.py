@@ -79,8 +79,8 @@ class Experiment:
         If file_name is provided then it saves the plot to file instead.
         '''
 
-        fig = plt.figure(figsize=(10, 5))
-        gs = GridSpec(nrows=2, ncols=2, width_ratios=[3, 1], height_ratios=[1, 1])
+        fig = plt.figure(figsize=(12, 5))
+        gs = GridSpec(nrows=2, ncols=2, width_ratios=[3, 1.2], height_ratios=[1, 1])
 
         ax0 = fig.add_subplot(gs[0, 0])
         plt.title('Makespan')
@@ -98,7 +98,9 @@ class Experiment:
             ['best makespan', "{:.5e}".format(self.best_makespan)],
             ['runtime', str(round(self.runtime, 5))],
             ['accept ratio', self.accept_ratio],
-            ['mean diff good move', "{:.5e}".format(round(mean(self.accepted_good_difference_lst)))]
+            ['mean diff accept good move', "{:.5e}".format(round(mean(self.accepted_good_difference_lst)))],
+            ['mean diff accept bad move', "{:.5e}".format(round(mean(self.accepted_bad_difference_lst)))],
+            ['nr. of accept neutral moves', self.accepted_zero_difference]
         ]
         ax2.axis('tight')
         ax2.axis('off')
