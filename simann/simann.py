@@ -136,6 +136,10 @@ class SimulatedAnnealing:
         temperature_lst = []
         # difference between t and t-1
         difference_lst = [ 0 ]
+        # accepted differences for good, bad and neutral moves
+        accepted_good_difference_lst = [ 0 ]
+        accepted_bad_difference_lst = [ 0 ]
+        accepted_zero_difference = 0
         # number of times that we accepted the random move
         accept_nr = 0
 
@@ -169,6 +173,13 @@ class SimulatedAnnealing:
                 state[job] = new_machine
                 # and update the makespan
                 current_makespan = new_makespan
+                #track the differences that are accepted
+                if difference < 0:
+                    accepted_good_difference_lst.append(difference)
+                elif difference == 0:
+                    accepted_zero_difference += 1
+                else:
+                    accepted_bad_difference_lst.append(difference)
             else:
                 pass
                 #print("Reject move!")
@@ -197,6 +208,9 @@ class SimulatedAnnealing:
             makespan_lst = makespan_lst,
             temperature_lst = temperature_lst,
             difference_lst = difference_lst,
+            accepted_good_difference_lst = accepted_good_difference_lst,
+            accepted_bad_difference_lst = accepted_bad_difference_lst,
+            accepted_zero_difference = accepted_zero_difference,
         )
 
         return self.result

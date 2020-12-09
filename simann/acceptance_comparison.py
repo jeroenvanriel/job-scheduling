@@ -22,8 +22,8 @@ output_prefix = "./experiments/accept_exp"
 #accept_exp4 = instance.start(100000, exponentialDecayNonInc, 8e10, 4e10)
 #accept_exp4.plotResults("{}4.png".format(output_prefix))
 
-accept_exp5 = instance.start(10000, exponentialDecayGreedy, 1, 4e12)
+accept_exp5 = instance.start(10000, exponentialDecayGreedy, 1e-10, 4e12)
 accept_exp5.plotResults("{}5.png".format(output_prefix))
 
-accept_exp6 = instance.start(10000, exponentialDecayGreedy, 1, 4e12)
+accept_exp6 = instance.start(10000, exponentialDecayGreedy, 3e-10, 4e12)
 accept_exp6.plotResults("{}6.png".format(output_prefix))
