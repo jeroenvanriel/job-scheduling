@@ -12,11 +12,11 @@ output_prefix = "./experiments/data_exp"
 
 # run experiments and save their result plots to file
 
-exp1 = instance.start(100, localSearch, 0, 8e10, 4e12)
+exp1 = instance.start(1000, localSearch, 0, 8e10, 4e12)
 exp1.plotResults("{}1.png".format(output_prefix))
 exp1.plotSchedule(instance, file_name="./experiments/data_exp1_schedule.png")
 
-exp2 = instance.start(100, localSearch, 1, 8e10, 4e12)
+exp2 = instance.start(1000, localSearch, 1, 8e10, 4e12)
 exp2.plotResults("{}2.png".format(output_prefix))
 
 
