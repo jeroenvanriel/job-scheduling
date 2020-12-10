@@ -48,7 +48,7 @@ class SimulatedAnnealing:
 
         s = [[] for x in range(self.n)]
 
-        min_ci = 0
+        min_ci = float("inf")
         min_i = 0
 
         # assign a machine to each job
@@ -68,6 +68,9 @@ class SimulatedAnnealing:
             s[max_it] = min_i
             # set the jobs makespan to -1
             copyptimes[max_it] = -1
+
+            min_ci = float("inf")
+            min_i = 0
 
             # check which machine has smallest makespan
             for i in range(self.m):
