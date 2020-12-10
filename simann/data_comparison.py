@@ -21,7 +21,7 @@ exp2.plotResults("{}2.png".format(output_prefix))
 
 
 exp3 = instance.start(10000, localSearch, 0, 8e10, 4e12)
-exp3.plotResults("{}1.png".format(output_prefix))
+exp3.plotResults("{}3.png".format(output_prefix))
 
-exp3 = instance.start(10000, localSearch, 1, 8e10, 4e12)
-exp3.plotResults("{}2.png".format(output_prefix))
+exp4 = instance.start(10000, localSearch, 1, 8e10, 4e12)
+exp4.plotResults("{}4.png".format(output_prefix))
