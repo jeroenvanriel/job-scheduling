@@ -28,14 +28,14 @@ exp4.plotResults("{}4.png".format(output_prefix))
 
 
 exp6 = instance.start(100000, exponentialDecay, 1, 8e10, 4e12)
-exp6.plotResults("{}5.png".format(output_prefix))
+exp6.plotResults("{}6.png".format(output_prefix))
 
 exp5 = instance.start(100000, exponentialDecay, 0, 8e10, 4e12)
 exp5.plotResults("{}5.png".format(output_prefix))
 
 
 exp7 = instance.start(100000, exponentialDecayNonInc, 0, 8e10, 4e12)
-exp7.plotResults("{}6.png".format(output_prefix))
+exp7.plotResults("{}7.png".format(output_prefix))
 
 exp8 = instance.start(100000, exponentialDecayNonInc, 1, 8e10, 4e12)
-exp8.plotResults("{}6.png".format(output_prefix))
+exp8.plotResults("{}8.png".format(output_prefix))
