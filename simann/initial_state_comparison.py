@@ -13,15 +13,16 @@ output_prefix = "./experiments/state_exp"
 # run experiments and save their result plots to file
 
 exp1 = instance.start(1000, localSearch, 0, 8e10, 4e12)
-exp1.plotResults("{}1.png".format(output_prefix))
 exp1.plotSchedule(instance, file_name="./experiments/state_exp1_schedule.png")
 
 exp2 = instance.start(1000, localSearch, 1, 8e10, 4e12)
 exp2.plotResults("{}2.png".format(output_prefix))
 
+exp3 = instance.start(10000, linearBadmoveAccept, 1, 8e10, 4e12)
+exp3.plotResults("{}4.png".format(output_prefix))
 
-exp3 = instance.start(10000, localSearch, 0, 8e10, 4e12)
-exp3.plotResults("{}3.png".format(output_prefix))
+exp4 = instance.start(100000, exponentialDecay, 1, 8e10, 4e12)
+exp4.plotResults("{}5.png".format(output_prefix))
 
-exp4 = instance.start(10000, localSearch, 1, 8e10, 4e12)
-exp4.plotResults("{}4.png".format(output_prefix))
+exp5 = instance.start(100000, exponentialDecayNonInc, 1, 8e10, 4e12)
+exp5.plotResults("{}6.png".format(output_prefix))
