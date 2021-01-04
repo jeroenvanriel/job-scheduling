@@ -42,50 +42,30 @@ class SimulatedAnnealing:
 
 
     def getInitialState(self):
-        """Returns the state after assigning each job by the LPT rule"""
+        """Returns the state after assigning each job by the LPT rule."""
 
-        copyptimes = deepcopy(self.ptimes)
+        # enumerate the jobs, which yields a list of tuples, which we sort on
+        # the processing times (in the second entry) in descending order
+        ptimes_enumerated = list(enumerate(self.ptimes))
+        ptimes_sorted = sorted(ptimes_enumerated, key=lambda x:x[1], reverse=True)
 
-        s = [[] for x in range(self.n)]
+        # the state is encoded as the assignment of jobs to machines
+        state = [-1 for x in range(self.n)]
 
-        min_ci = 0
-        min_i = 0
+        # we keep track of the current makespan of each machine
+        makespans = [0 for x in range(self.m)]
 
-        # assign a machine to each job
-        for j in range(self.n):
+        # loop over longest processing times first
+        for (j, ptime) in ptimes_sorted:
+            # determine the machine with the current minimum workload
+            min_i = makespans.index(min(makespans))
 
-            # reset the variables for each iteration
-            max_t = 0
-            max_it = 0
+            # assign job j to machine m_i
+            state[j] = min_i
+            # update the makespans
+            makespans[min_i] += ptime
 
-            # check which position has biggest makespan
-            for i in range(self.n):
-                if max_t < copyptimes[i]:
-                    max_t = copyptimes[i]
-                    max_it = i
-
-            # assign the job with biggest makespan to machine with smallest makespan
-            s[max_it] = min_i
-            # set the jobs makespan to -1
-            copyptimes[max_it] = -1
-
-            # check which machine has smallest makespan
-            for i in range(self.m):
-                
-                c_i = 0
-                
-                # iterate over jobs and add to makespan if assigned to this machine
-                for k in range(self.n):
-                    if s[k] == i:
-                        c_i += self.ptimes[s[k]]
-
-                # if makespan of this machine is smaller then replace it
-                if c_i < min_ci:
-                    min_ci = c_i
-                    min_i = i
-
-        return s
-
+        return state
 
     def getMove(self, state):
         """
