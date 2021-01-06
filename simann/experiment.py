@@ -84,13 +84,14 @@ class Experiment:
 
         ax0 = fig.add_subplot(gs[0, 0])
         plt.title('Makespan')
-        plt.yscale('log')
+        # plt.yscale('log')
         ax0.plot(self.makespan_lst)
 
         ax1 = fig.add_subplot(gs[1, 0])
         plt.title('Difference')
         plt.yscale('linear')
         ax1.plot(self.difference_lst)
+        ax1.axhline(y=0, color='k', linestyle='--', linewidth=1)
 
         ax2 = fig.add_subplot(gs[0, 1])
         table_text = [
