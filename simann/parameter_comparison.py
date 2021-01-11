@@ -7,27 +7,31 @@ from matplotlib.gridspec import GridSpec
 from dataclasses import dataclass
 from statistics import mean
 
-# problem defenition
+# problem definition
 m = 10 # number of machines
 jobs_file = "../ptimes.txt" # file that contains the jobs
 instance = SimulatedAnnealing.fromFile(jobs_file, m)
 
-
-
-
+# list of lists, for the eventual results in the search grid
 final_best_makespan_lst = []
+
+# we perform hyperparameter tweaking by doing a grid search on the ranges defined below
+
+# bad-acceptance parameter range
 k_min = 10**8
 k_step = 2*10**9
 k_n = 40
 
+# good-acceptance parameter range
+i_min = 10**8
+i_step = 2*10**8
+i_n = 25
+
+# loop through the bad-acceptance parameters
 for k in range(k_n):
     best_makespan_lst = []
     
-    i_min = 10**8
-    i_step = 2*10**8
-    i_n = 25
-
-
+    # loop through the good-acceptance parameter
     for i in range(i_n):
         makespan_lst = []
         for j in range(2):
@@ -39,7 +43,7 @@ for k in range(k_n):
         
         
     final_best_makespan_lst.append(best_makespan_lst)
-    
+
 
 
 fig = plt.figure(figsize=(8, 8))
