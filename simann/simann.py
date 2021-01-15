@@ -67,11 +67,12 @@ class SimulatedAnnealing:
 
         return state
 
-    def getMove(self, state):
+    def getInsertMove(self, state):
         """
-        Randomly determines a 'move' to a neighbor state. A move is a 3-tuple (job, current_machine, new_machine), which
-        indicates that job was assigned to current_machine in the current state and will be assigned to new_machine in
-        the neighboring state.
+        Randomly determines an 'insert-move' to a neighbor state and the new makespan after this move.
+        An insert-move is a 2-tuple (job, new_machine), which indicates that job will be assigned to
+        new_machine in the neighboring state.
+        Gives the new makespan after this move has been made as the second element in the tuple.
         """
 
         # we randomly select one of the jobs
@@ -84,9 +85,74 @@ class SimulatedAnnealing:
         while new_machine == current_machine:
             new_machine = random.randrange(self.m)
         
-        # return the change
-        return (job, current_machine, new_machine)
+        move = (job, new_machine)
 
+        new_makespan = self.makespanAfterInsertMove(state, move)
+
+        # return the change
+        return ([move], new_makespan)
+
+    def makespanAfterInsertMove(self, state, move):
+        """Computes the makespan of a given state, after the given insert-move has been made."""
+
+        (job, new_machine) = move
+
+        # list containing the total completion time for each machine
+        totals = [0 for x in range(self.m)]
+
+        # loop over the jobs
+        for j in range(self.n):
+            if j == job:
+                totals[new_machine] += self.ptimes[j]
+            else:
+                totals[state[j]] += self.ptimes[j]
+
+        # return the maximum completion time over all machines, which is called the makespan
+        return max(totals)
+
+    def getSwapMove(self, state):
+        """
+        Randomly determines a 'swap-move' to a neighbor state and the new makespan after this move.
+        A swap-move is exchanging job1 and job2 in the schedule. It is encoded as two insert-moves.
+        Gives the new makespan after this move has been made as the second element in the tuple.
+        """
+
+        # we randomly select two jobs
+        job1 = random.randrange(self.n)
+        job2 = random.randrange(self.n)
+        while  job1 == job2:
+            job2 = random.randrange(self.n)
+
+        move1 = (job1, state[job2])
+        move2 = (job2, state[job1])
+
+        moves = [move1, move2]
+
+        new_makespan = self.makespanAfterSwapMove(state, moves)
+
+        # return the change
+        return (moves, new_makespan)
+
+    def makespanAfterSwapMove(self, state, move):
+        """Computes the makespan of a given state, after the given swap-move has been made."""
+
+        (job1, new_machine1) = move[0]
+        (job2, new_machine2) = move[1]
+
+        # list containing the total completion time for each machine
+        totals = [0 for x in range(self.m)]
+
+        # loop over the jobs
+        for j in range(self.n):
+            if j == job1:
+                totals[new_machine1] += self.ptimes[j]
+            elif j == job2:
+                totals[new_machine2] += self.ptimes[j]
+            else:
+                totals[state[j]] += self.ptimes[j]
+
+        # return the maximum completion time over all machines, which is called the makespan
+        return max(totals)
 
     def makespan(self, state):
         """Computes the makespan of a given state."""
@@ -97,29 +163,9 @@ class SimulatedAnnealing:
         # loop over the jobs
         for j in range(self.n):
             totals[state[j]] += self.ptimes[j]
-        
+
         # return the maximum completion time over all machines, which is called the makespan
         return max(totals)
-
-
-    def makespanAfterMove(self, state, move):
-        """Computes the makespan of a given state, after the given move has been made."""
-
-        (job, current_machine, new_machine) = move
-
-        # list containing the total completion time for each machine
-        totals = [0 for x in range(self.m)]
-        
-        # loop over the jobs
-        for j in range(self.n):
-            if j == job:
-                totals[new_machine] += self.ptimes[j]
-            else:
-                totals[state[j]] += self.ptimes[j]
-        
-        # return the maximum completion time over all machines, which is called the makespan
-        return max(totals)
-
 
     def getTemperature(self, k, n_iterations):
         """Returns the current temperature based on the current iteration and the total number of iterations. """
@@ -128,20 +174,30 @@ class SimulatedAnnealing:
         return 1 - ratio
 
 
-    def start(self, n_iterations, p_function, initial_state, good_accept, bad_accept, state_callback=None):
+    def start(self, n_iterations, p_function, initial_state, good_accept, bad_accept,
+            swap_enabled=False,
+            swap_after=0,
+            state_callback=None,
+            debug=False):
         '''
         n_iterations: the total number of iterations that are used
         p_function: acceptance probability function which determines wheter to accept a move based on
             the current difference and current temperature
+        swap_enabled: Wheter to make swap moves or not.
+        swap_after: The number of rejected moves before the algorithm turns to making swap moves only. When
+            the parameter swap_enabled=True is given, the default value of swap_after (0) will make sure
+            that the algorithm only performs swap moves.
         state_callback: callback function that is called with the current iteration number, current state 
             and current makespan, only use this for debugging purposes.
+        debug: whether to show debugging output.
 
         returns an Experiment object which contains the details about the completed run
         '''
 
-        print("Number of jobs in input: {}".format(self.n))
-        print("Number of machines: {}".format(self.m))
-        print("Number of iterations: {}".format(n_iterations))
+        if debug:
+            print("Number of jobs in input: {}".format(self.n))
+            print("Number of machines: {}".format(self.m))
+            print("Number of iterations: {}".format(n_iterations))
 
         # we get the current time in order to calculate the total computation time
         t0 = timer()
@@ -172,6 +228,10 @@ class SimulatedAnnealing:
         # number of times that we accepted the random move
         accept_nr = 0
 
+        # keep track of how many consecutive moves we reject (for switching to swap-moves)
+        n_rejected = 0
+        swap = False
+
         # start the simulated annealing iterations
         for k in range(n_iterations):
             # callback
@@ -183,26 +243,39 @@ class SimulatedAnnealing:
             #print("Current temperature is: {}".format(temperature))
             temperature_lst.append(temperature)
 
-            # generate a random move to a neighboring state
-            move = self.getMove(state)
+            # determine wheter to make swap moves
+            swap = n_rejected >= swap_after or swap
 
-            # compute the new makespan that we would get after making the move
-            new_makespan = self.makespanAfterMove(state, move)
+            if debug:
+                print("n_rejected: {}".format(n_rejected))
+                print("swap_after: {}".format(swap_after))
+                print("swap: {}".format(swap))
+
+            # generate a random move to a neighboring state and compute the new makespan we would get after
+            # making this move
+            if swap_enabled and swap:
+                (moves, new_makespan) = self.getSwapMove(state)
+            else:
+                (moves, new_makespan) = self.getInsertMove(state)
 
             # decide if we are going to accept this move based on the difference in the makespans
             difference = new_makespan - current_makespan
             difference_lst.append(difference)
             
             if p_function(difference, temperature, good_accept, bad_accept):
+                n_rejected = 0
                 #print("Accept move!")
                 accept_nr += 1
 
-                # make the move
-                (job, current_machine, new_machine) = move
-                state[job] = new_machine
+                # make the move(s)
+                for move in moves:
+                    (job, new_machine) = move
+                    state[job] = new_machine
+
                 # and update the makespan
                 current_makespan = new_makespan
-                #track the differences that are accepted
+
+                # track the differences that are accepted
                 if difference < 0:
                     accepted_good_difference_lst.append(difference)
                 elif difference == 0:
@@ -210,7 +283,7 @@ class SimulatedAnnealing:
                 else:
                     accepted_bad_difference_lst.append(difference)
             else:
-                pass
+                n_rejected += 1
                 #print("Reject move!")
             
             # update the best known values
